@@ -16,3 +16,7 @@ use App\Models\Product;
 Route::get('/products', function () {
     return Product::all();
 });
+
+Route::get('/products/{id}', function ($id) {
+    return Product::findOrFail($id);
+});
