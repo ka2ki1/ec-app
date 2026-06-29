@@ -6,7 +6,7 @@ function ProductDetail() {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
-  const { addToCart } = useCart()
+  const { items, addToCart } = useCart()
   const [added, setAdded] = useState(false)
 
   useEffect(() => {
@@ -30,6 +30,11 @@ function ProductDetail() {
     return <p style={{ padding: '2rem' }}>商品が見つかりませんでした。</p>
   }
 
+  const cartItem = items.find((item) => item.id === product.id)
+  const quantityInCart = cartItem ? cartItem.quantity : 0
+  const isOutOfStock = product.stock === 0
+  const isMaxInCart = quantityInCart >= product.stock
+
   function handleAddToCart() {
     addToCart(product)
     setAdded(true)
@@ -45,8 +50,18 @@ function ProductDetail() {
       <p>{product.description}</p>
       <p style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>¥{product.price.toLocaleString()}</p>
       <p style={{ color: '#666' }}>在庫: {product.stock}</p>
-      <button onClick={handleAddToCart} style={{ padding: '0.5rem 1rem', fontSize: '1rem' }}>
-        {added ? '追加しました!' : 'カートに追加'}
+      <button
+        onClick={handleAddToCart}
+        disabled={isOutOfStock || isMaxInCart}
+        style={{ padding: '0.5rem 1rem', fontSize: '1rem' }}
+      >
+        {isOutOfStock
+          ? '在庫切れ'
+          : isMaxInCart
+          ? 'カートが上限です'
+          : added
+          ? '追加しました!'
+          : 'カートに追加'}
       </button>
     </div>
   )
