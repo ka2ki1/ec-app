@@ -22,7 +22,6 @@ export function CartProvider({ children }) {
     setItems((prev) => {
       const existing = prev.find((item) => item.id === product.id)
       if (existing) {
-        // 在庫を超えないようにする
         if (existing.quantity >= product.stock) {
           return prev
         }
@@ -44,7 +43,7 @@ export function CartProvider({ children }) {
     setItems((prev) =>
       prev.map((item) => {
         if (item.id !== productId) return item
-        if (item.quantity >= item.stock) return item // 在庫を超えない
+        if (item.quantity >= item.stock) return item
         return { ...item, quantity: item.quantity + 1 }
       })
     )
@@ -58,8 +57,12 @@ export function CartProvider({ children }) {
             ? { ...item, quantity: item.quantity - 1 }
             : item
         )
-        .filter((item) => item.quantity > 0) // 0になったら削除
+        .filter((item) => item.quantity > 0)
     )
+  }
+
+  function clearCart() {
+    setItems([])
   }
 
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -73,6 +76,7 @@ export function CartProvider({ children }) {
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,
+        clearCart,
         totalPrice,
         totalCount,
       }}
