@@ -20,3 +20,8 @@ Route::get('/products', function () {
 Route::get('/products/{id}', function ($id) {
     return Product::findOrFail($id);
 });
+
+use App\Http\Controllers\OrderController;
+
+Route::post('/orders', [OrderController::class, 'store']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
