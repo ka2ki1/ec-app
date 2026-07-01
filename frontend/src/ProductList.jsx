@@ -24,7 +24,13 @@ function ProductList() {
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>商品一覧</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>商品一覧</h1>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <Link to="/orders">注文履歴</Link>
+          <Link to="/cart">カート</Link>
+        </div>
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
         {products.map((product) => (
           <Link
