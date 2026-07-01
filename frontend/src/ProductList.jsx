@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from './AuthContext'
 
 function ProductList() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const { user, logout } = useAuth()
 
   useEffect(() => {
     fetch('http://localhost:8080/api/products')
@@ -26,9 +28,20 @@ function ProductList() {
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>商品一覧</h1>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <Link to="/orders">注文履歴</Link>
-          <Link to="/cart">カート</Link>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          {user ? (
+            <>
+              <span>{user.name}さん</span>
+              <Link to="/orders">注文履歴</Link>
+              <Link to="/cart">カート</Link>
+              <button onClick={logout} style={{ cursor: 'pointer' }}>ログアウト</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">ログイン</Link>
+              <Link to="/register">新規登録</Link>
+            </>
+          )}
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
