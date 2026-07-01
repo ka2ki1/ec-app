@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +10,14 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        $orders = Order::with('items')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return response()->json($orders);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -25,7 +32,6 @@ class OrderController extends Controller
                 $orderItemsData = [];
 
                 foreach ($validated['items'] as $item) {
-                    // 行ロックして在庫を取得(同時注文での競合を防ぐ)
                     $product = Product::lockForUpdate()->findOrFail($item['product_id']);
 
                     if ($product->stock < $item['quantity']) {
@@ -34,7 +40,6 @@ class OrderController extends Controller
                         ]);
                     }
 
-                    // 在庫を減らす
                     $product->decrement('stock', $item['quantity']);
 
                     $subtotal = $product->price * $item['quantity'];

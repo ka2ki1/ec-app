@@ -4,6 +4,7 @@ import ProductList from './ProductList'
 import ProductDetail from './ProductDetail'
 import Cart from './Cart'
 import OrderComplete from './OrderComplete'
+import OrderList from './OrderList'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<OrderList />} />
           <Route path="/orders/:id/complete" element={<OrderComplete />} />
         </Routes>
       </BrowserRouter>
